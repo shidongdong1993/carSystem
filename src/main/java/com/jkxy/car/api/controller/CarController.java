@@ -17,8 +17,15 @@ public class CarController {
     private CarService carService;
 
     /**
+     * 作业一：
+     * 开发一个接口，实现对车系查询系统中的车辆进行购买，购买后数据库内的车辆数量减少。
+     * 在客户购买车辆时，如果某一个型号车辆剩余数量少于客户购买数量，需要考虑交易问题，避免多位客户购买同一辆车。
+     * 使用已有的项目框架完成该项目功能的编码实现。
+     * 实现此接口后通过postman进行接口测试
+     */
+
+    /**
      * 查询所有
-     *
      * @return
      */
     @GetMapping("findAll")
