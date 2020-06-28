@@ -25,4 +25,8 @@ public interface CarDao {
 
     @Insert("insert into carMessage(carName,carType,price,carSeries) values(#{carName},#{carType},#{price},#{carSeries})")
     void insertCar(Car car);
+
+    @Select("select * from carMessage where carName=#{carName} and carType=#{carType}")
+    Car findByCarNameAndCarType(String carName, String carType);
+
 }

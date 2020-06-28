@@ -6,6 +6,9 @@ import com.jkxy.car.api.utils.JSONResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 
@@ -23,6 +26,39 @@ public class CarController {
      * 使用已有的项目框架完成该项目功能的编码实现。
      * 实现此接口后通过postman进行接口测试
      */
+    @PostMapping("buy")
+    public JSONResult buy(@RequestParam @Valid @NotBlank String carName,
+                          @RequestParam @Valid @NotBlank String carType,
+                          @RequestParam @Valid @NotNull Integer buyNumber){
+        if(buyNumber>=1){
+            Car car = null;
+            Integer carNum= null;
+            try {
+                car = carService.findByCarNameAndCarType(carName,carType);
+                carNum = car.getNum();
+            } catch (Exception e) {
+                return JSONResult.errorException(e.getMessage());
+            }
+            if(car.getNum()>=buyNumber){
+                try {
+                    Integer remainNum=carNum-buyNumber;
+                    car.setNum(remainNum);
+                    carService.updateById(car);
+                } catch (Exception e) {
+                    return JSONResult.errorException(e.getMessage());
+                }
+                return JSONResult.ok("购买成功!");
+            }
+            else {
+                return JSONResult.errorException("剩余数量不足，请重新选择数量或其他车型");
+            }
+
+        }else {
+            return JSONResult.errorException("请正确填写购买数量(大于等于1)！");
+        }
+
+    }
+
 
     /**
      * 查询所有
