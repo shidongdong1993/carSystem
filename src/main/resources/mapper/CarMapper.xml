@@ -2,24 +2,28 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jkxy.car.api.dao.CarDao">
 
-    <select id="fuzzyQueryPage" resultType="com.jkxy.car.api.pojo.Car">
+    <select id="fuzzyQueryPaging" resultType="com.jkxy.car.api.pojo.Car">
+
         SELECT * FROM carMessage
+
         <where>
-
-            <if test="carName != null and carName != ''">
-                AND carName LIKE CONCAT(CONCAT('%',#{carName},'%'))
+            <if test="carName!=null and carName!=''">
+                <!-- 在xml的注释上面，切记只能用这样子注释代码-->
+                <!-- 双横线 和 /** **/ 都会报错-->
+                <!-- 实现模糊查询功能-->
+                AND carName LIKE CONCAT(CONCAT('%', #{carName}, '%'))
             </if>
-
         </where>
 
-        <if test="fromItem == null and size != null">
-             LIMIT #{size};
+        <if test="startItem==null and size!=null">
+             <!-- LIMIT n ：表示从第0条开始，取n条数据，是limit(0,n)的缩写-->
+             LIMIT #{size}
         </if>
 
-        <if test="fromItem != null and size != null">
-             LIMIT #{fromItem}, #{size};
+        <if test="startItem!=null and size!=null">
+             <!-- LIMIT m,n : 表示从第m+1条开始，取n条数据-->
+             LIMIT #{startItem}, #{size}
         </if>
-
 
     </select>
 

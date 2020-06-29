@@ -8,6 +8,7 @@ import java.util.List;
 
 @Mapper
 public interface CarDao {
+
     @Select("select * from carMessage")
     List<Car> findAll();
 
