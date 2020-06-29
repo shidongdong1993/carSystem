@@ -29,4 +29,5 @@ public interface CarDao {
     @Select("select * from carMessage where carName=#{carName} and carType=#{carType}")
     Car findByCarNameAndCarType(String carName, String carType);
 
+    List<Car> fuzzyQueryPaging(String carName, Integer startItem, Integer size);
 }

@@ -4,7 +4,6 @@ import com.jkxy.car.api.pojo.Car;
 
 import java.util.List;
 
-
 public interface CarService {
 
     List<Car> findAll();
@@ -20,4 +19,7 @@ public interface CarService {
     void insertCar(Car car);
 
     Car findByCarNameAndCarType(String carName, String carType);
+
+    List<Car> fuzzyQueryPaging(String carName, Integer startItem, Integer size);
+
 }

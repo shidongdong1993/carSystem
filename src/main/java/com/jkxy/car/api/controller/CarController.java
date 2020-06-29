@@ -4,6 +4,7 @@ import com.jkxy.car.api.pojo.Car;
 import com.jkxy.car.api.service.CarService;
 import com.jkxy.car.api.utils.JSONResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -30,18 +31,18 @@ public class CarController {
     public JSONResult buy(@RequestParam @Valid @NotBlank String carName,
                           @RequestParam @Valid @NotBlank String carType,
                           @RequestParam @Valid @NotNull Integer buyNumber){
-        if(buyNumber>=1){
+        if(buyNumber >= 1){
             Car car = null;
-            Integer carNum= null;
+            Integer carNum = null;
             try {
                 car = carService.findByCarNameAndCarType(carName,carType);
                 carNum = car.getNum();
             } catch (Exception e) {
                 return JSONResult.errorException(e.getMessage());
             }
-            if(car.getNum()>=buyNumber){
+            if(car.getNum() >= buyNumber){
                 try {
-                    Integer remainNum=carNum-buyNumber;
+                    Integer remainNum = carNum - buyNumber;
                     car.setNum(remainNum);
                     carService.updateById(car);
                 } catch (Exception e) {
@@ -59,6 +60,34 @@ public class CarController {
 
     }
 
+    /**
+     * 作业二：
+     * 开发一个接口，实现某个品牌车辆的模糊查询，查询后获取任意范围的数据（例如：第5条数据到第10条数据），对获取到的数据，进行展示（模拟分页操作）。
+     * 实现此接口后通过postman进行接口测试。
+     * 完成该功能的编码实现。
+     */
+    @GetMapping("fuzzyQueryPaging")
+    public JSONResult FuzzyQueryPaging(String carName, Integer startItem ,Integer endItem){
+
+        Integer size = null;
+
+        if(startItem != null && endItem != null){
+            if(startItem >= 0 && endItem >= 0){
+                size = endItem - startItem + 1;
+                startItem = startItem - 1;
+            }
+        }
+        List<Car> cars = null;
+        try {
+            cars = carService.fuzzyQueryPaging(carName, startItem, size);
+        } catch (Exception e) {
+            return JSONResult.errorException(e.getMessage());
+        }
+        if(CollectionUtils.isEmpty(cars)){
+            return JSONResult.errorMap("无此数据");
+        }
+        return JSONResult.ok(cars);
+    }
 
     /**
      * 查询所有
